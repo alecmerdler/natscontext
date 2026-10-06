@@ -1,0 +1,36 @@
+services:
+  nats:
+    image: nats:2.10-alpine
+    command: ["-js"]
+    ports:
+      - "4222:4222"
+
+  generate:
+    build:
+      context: ../../
+      dockerfile: examples/queue/Dockerfile
+    environment:
+      ENTRYPOINT: generate
+      NATS_URL: nats://nats:4222
+    depends_on:
+      - nats
+
+  enrich:
+    build:
+      context: ../../
+      dockerfile: examples/queue/Dockerfile
+    environment:
+      ENTRYPOINT: enrich
+      NATS_URL: nats://nats:4222
+    depends_on:
+      - nats
+
+  filter:
+    build:
+      context: ../../
+      dockerfile: examples/queue/Dockerfile
+    environment:
+      ENTRYPOINT: filter
+      NATS_URL: nats://nats:4222
+    depends_on:
+      - nats
