@@ -1,0 +1,36 @@
+services:
+  nats:
+    image: nats:2.10-alpine
+    command: ["-js"]
+    ports:
+      - "4222:4222"
+
+  node-1:
+    build:
+      context: ../../
+      dockerfile: examples/leader-election/Dockerfile
+    environment:
+      NODE_ID: node-1
+      NATS_URL: nats://nats:4222
+    depends_on:
+      - nats
+
+  node-2:
+    build:
+      context: ../../
+      dockerfile: examples/leader-election/Dockerfile
+    environment:
+      NODE_ID: node-2
+      NATS_URL: nats://nats:4222
+    depends_on:
+      - nats
+
+  node-3:
+    build:
+      context: ../../
+      dockerfile: examples/leader-election/Dockerfile
+    environment:
+      NODE_ID: node-3
+      NATS_URL: nats://nats:4222
+    depends_on:
+      - nats
